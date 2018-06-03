@@ -45,6 +45,9 @@ var GameState={
         this.player.animations.add('walking',[0,1,2,1],6,true);
         this.game.physics.arcade.enable(this.player);
         
+        this.player.customParams={};
+        
+        this.createOnScreenControls();
         
     },
     
@@ -55,17 +58,18 @@ var GameState={
         
         this.player.body.velocity.x=0;
         
-        if(this.cursors.left.isDown)
+        if(this.cursors.left.isDown||this.player.customParams['moveLeft']==true)
             {
                 this.player.body.velocity.x=-this.RUNNING_SPEED;
             }
-        else if(this.cursors.right.isDown)
+        else if(this.cursors.right.isDown||this.player.customParams['moveRight']==true)
             {
                 this.player.body.velocity.x=this.RUNNING_SPEED;
             }
-        if(this.cursors.up.isDown&&this.player.body.touching.down)
+        if((this.cursors.up.isDown||this.player.customParams['mustJump']==true)&&this.player.body.touching.down)
             {
                 this.player.body.velocity.y= -this.JUMPING_SPEED;
+                this.player.customParams['mustJump']=false;
             }
         
     },
@@ -73,7 +77,69 @@ var GameState={
     landed : function(player, ground)
     {
         console.log('landed');
+    },
+    
+    createOnScreenControls : function()
+    {
+        this.leftArrow=this.game.add.button(20,535,'arrowButton');
+        this.leftArrow.alpha=0.5;
+        this.leftArrow.events.onInputDown.add(function(){
+            this.player.customParams['moveLeft']=true;
+        },this);
+        
+         this.leftArrow.events.onInputUp.add(function(){
+            this.player.customParams['moveLeft']=false;
+        },this);
+        
+        this.leftArrow.events.onInputOver.add(function(){
+            this.player.customParams['moveLeft']=true;
+        },this);
+        
+         this.leftArrow.events.onInputOut.add(function(){
+            this.player.customParams['moveLeft']=false;
+        },this);
+        
+        this.rightArrow=this.game.add.button(100,535,'arrowButton');
+        this.rightArrow.alpha=0.5;
+        
+        this.rightArrow.events.onInputDown.add(function(){
+            this.player.customParams['moveRight']=true;
+        },this);
+        
+         this.rightArrow.events.onInputUp.add(function(){
+            this.player.customParams['moveRight']=false;
+        },this);
+        
+        this.rightArrow.events.onInputOver.add(function(){
+            this.player.customParams['moveRight']=true;
+        },this);
+        
+         this.rightArrow.events.onInputOut.add(function(){
+            this.player.customParams['moveRight']=false;
+        },this);
+        
+        this.actionButton=this.game.add.button(280,535,'actionButton');
+        this.actionButton.alpha=0.5;
+        
+        this.actionButton.events.onInputDown.add(function(){
+            this.player.customParams.mustJump=true;
+            
+        },this);
+        
+        this.actionButton.events.onInputUp.add(function(){
+            this.player.customParams.mustJump=false;
+        },this);
+        
+        this.actionButton.events.onInputOver.add(function(){
+            this.player.customParams.mustJump=true;
+            
+        },this);
+        
+        this.actionButton.events.onInputOut.add(function(){
+            this.player.customParams.mustJump=false;
+        },this);
     }
+   
 }
 
 game.state.add('GameState',GameState);

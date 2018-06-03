@@ -9,6 +9,11 @@ var GameState={
         
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y=1000;
+        
+        this.cursors=this.game.input.keyboard.createCursorKeys();
+        
+        this.RUNNING_SPEED=180;
+        this.JUMPING_SPEED=550;
     },
      preload : function()
     {
@@ -39,12 +44,30 @@ var GameState={
         this.player.anchor.setTo(0.5);
         this.player.animations.add('walking',[0,1,2,1],6,true);
         this.game.physics.arcade.enable(this.player);
+        
+        
     },
     
     update : function()
     {
         this.game.physics.arcade.collide(this.player,this.ground, this.landed);
         this.game.physics.arcade.collide(this.player,this.platform,this.landed);
+        
+        this.player.body.velocity.x=0;
+        
+        if(this.cursors.left.isDown)
+            {
+                this.player.body.velocity.x=-this.RUNNING_SPEED;
+            }
+        else if(this.cursors.right.isDown)
+            {
+                this.player.body.velocity.x=this.RUNNING_SPEED;
+            }
+        if(this.cursors.up.isDown&&this.player.body.touching.down)
+            {
+                this.player.body.velocity.y= -this.JUMPING_SPEED;
+            }
+        
     },
     
     landed : function(player, ground)

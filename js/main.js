@@ -35,10 +35,25 @@ var GameState={
         this.ground.body.allowGravity=false;
         this.ground.body.immovable=true;
         
-        this.platform=this.game.add.sprite(0,300,'platform');
-        this.game.physics.arcade.enable(this.platform);
-        this.platform.body.allowGravity=false;
-        this.platform.body.immovable=true;
+        
+        
+        this.platformData=[{"x":0, "y":430},{"x":45,"y":560},{"x":90,"y":290},{"x":0,"y":140}];
+        
+        this.platformGroup=this.game.add.group();
+        
+        this.platformGroup.enableBody=true;
+        
+    
+        
+        this.platformData.forEach(function(element){
+            this.platformNew=this.platformGroup.create(element.x,element.y,'platform');
+        
+        },this);
+        
+        this.platformGroup.setAll('body.immovable',true);
+        this.platformGroup.setAll('body.allowGravity',false);
+        
+        
 
         this.player=this.game.add.sprite(100,200,'player',3);
         this.player.anchor.setTo(0.5);
@@ -54,7 +69,7 @@ var GameState={
     update : function()
     {
         this.game.physics.arcade.collide(this.player,this.ground, this.landed);
-        this.game.physics.arcade.collide(this.player,this.platform,this.landed);
+        this.game.physics.arcade.collide(this.player,this.platformGroup,this.landed);
         
         this.player.body.velocity.x=0;
         

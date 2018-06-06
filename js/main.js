@@ -39,7 +39,6 @@ var GameState={
         this.ground.body.immovable=true;
             
         this.levelData=JSON.parse(this.game.cache.getText('levelJSON'));
-        console.log(this.levelData);
         this.platformGroup=this.game.add.group();
         
         this.platformGroup.enableBody=true;
@@ -54,7 +53,15 @@ var GameState={
         this.platformGroup.setAll('body.immovable',true);
         this.platformGroup.setAll('body.allowGravity',false);
         
+        this.fires=this.game.add.group();
+        this.fires.enableBody=true;
         
+        this.levelData.fireData.forEach(function(element){
+            this.fire=this.fires.create(element.x,element.y,'fire');
+            this.fire.animations.add('fire',[0,1],4,true);
+            this.fire.play('fire');
+        },this);
+        this.fires.setAll('body.allowGravity',false);
 
         this.player=this.game.add.sprite(this.levelData.playerStart.x,this.levelData.playerStart.y,'player',3);
         this.player.anchor.setTo(0.5);
@@ -73,6 +80,7 @@ var GameState={
     {
         this.game.physics.arcade.collide(this.player,this.ground, this.landed);
         this.game.physics.arcade.collide(this.player,this.platformGroup,this.landed);
+        this.game.physics.arcade.overlap(this.player,this.fires,this.killPlayer);
         
         this.player.body.velocity.x=0;
         
@@ -103,6 +111,11 @@ var GameState={
     landed : function(player, ground)
     {
         console.log('landed');
+    },
+    
+    killPlayer : function(player,fire)
+    {
+       game.state.start('GameState'); 
     },
     
     createOnScreenControls : function()

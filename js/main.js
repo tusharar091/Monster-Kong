@@ -79,11 +79,19 @@ var GameState={
         if(this.cursors.left.isDown||this.player.customParams['moveLeft']==true)
             {
                 this.player.body.velocity.x=-this.RUNNING_SPEED;
+                this.player.scale.setTo(1,1);
+                this.player.play('walking');
             }
         else if(this.cursors.right.isDown||this.player.customParams['moveRight']==true)
             {
                 this.player.body.velocity.x=this.RUNNING_SPEED;
+                this.player.scale.setTo(-1,1);
+                this.player.play('walking');
             }
+        else{
+            this.player.animations.stop();
+            this.player.frame=3;
+        }
         if((this.cursors.up.isDown||this.player.customParams['mustJump']==true)&&this.player.body.touching.down)
             {
                 this.player.body.velocity.y= -this.JUMPING_SPEED;
@@ -99,7 +107,7 @@ var GameState={
     
     createOnScreenControls : function()
     {
-        this.leftArrow=this.game.add.button(20,535,'arrowButton');
+        this.leftArrow=this.game.add.button(20,600,'arrowButton');
         this.leftArrow.alpha=0.5;
         this.leftArrow.events.onInputDown.add(function(){
             this.player.customParams['moveLeft']=true;
@@ -119,7 +127,7 @@ var GameState={
         
         this.leftArrow.fixedToCamera=true;
         
-        this.rightArrow=this.game.add.button(100,535,'arrowButton');
+        this.rightArrow=this.game.add.button(100,600,'arrowButton');
         this.rightArrow.alpha=0.5;
         
         this.rightArrow.events.onInputDown.add(function(){
@@ -140,7 +148,7 @@ var GameState={
         
         this.rightArrow.fixedToCamera=true;
         
-        this.actionButton=this.game.add.button(280,535,'actionButton');
+        this.actionButton=this.game.add.button(280,600,'actionButton');
         this.actionButton.alpha=0.5;
         
         this.actionButton.events.onInputDown.add(function(){

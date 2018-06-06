@@ -9,7 +9,8 @@ var GameState={
         
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y=1000;
-        
+        this.game.world.setBounds(0,0,360,700);
+
         this.cursors=this.game.input.keyboard.createCursorKeys();
         
         this.RUNNING_SPEED=180;
@@ -30,13 +31,11 @@ var GameState={
     
     create :  function()
     {
-        this.ground=this.game.add.sprite(0,500,'ground');
+        this.ground=this.game.add.sprite(0,638,'ground');
         this.game.physics.arcade.enable(this.ground);
         this.ground.body.allowGravity=false;
         this.ground.body.immovable=true;
-        
-        
-        
+            
         this.platformData=[{"x":0, "y":430},{"x":45,"y":560},{"x":90,"y":290},{"x":0,"y":140}];
         
         this.platformGroup=this.game.add.group();
@@ -55,12 +54,14 @@ var GameState={
         
         
 
-        this.player=this.game.add.sprite(100,200,'player',3);
+        this.player=this.game.add.sprite(10,545,'player',3);
         this.player.anchor.setTo(0.5);
         this.player.animations.add('walking',[0,1,2,1],6,true);
         this.game.physics.arcade.enable(this.player);
         
         this.player.customParams={};
+        
+        this.game.camera.follow(this.player);
         
         this.createOnScreenControls();
         
@@ -114,6 +115,8 @@ var GameState={
             this.player.customParams['moveLeft']=false;
         },this);
         
+        this.leftArrow.fixedToCamera=true;
+        
         this.rightArrow=this.game.add.button(100,535,'arrowButton');
         this.rightArrow.alpha=0.5;
         
@@ -132,6 +135,8 @@ var GameState={
          this.rightArrow.events.onInputOut.add(function(){
             this.player.customParams['moveRight']=false;
         },this);
+        
+        this.rightArrow.fixedToCamera=true;
         
         this.actionButton=this.game.add.button(280,535,'actionButton');
         this.actionButton.alpha=0.5;
@@ -153,6 +158,8 @@ var GameState={
         this.actionButton.events.onInputOut.add(function(){
             this.player.customParams.mustJump=false;
         },this);
+        
+        this.actionButton.fixedToCamera=true;
     }
    
 }

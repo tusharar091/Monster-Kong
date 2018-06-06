@@ -27,6 +27,8 @@ var GameState={
         
         this.load.spritesheet('player','assets/images/player_spritesheet.png',28,30,5,1,1);
         this.load.spritesheet('fire','assets/images/fire_spritesheet.png',20,21,2,1,1);
+        
+        this.load.text('levelJSON','assets/data/level.json');
     },
     
     create :  function()
@@ -36,15 +38,15 @@ var GameState={
         this.ground.body.allowGravity=false;
         this.ground.body.immovable=true;
             
-        this.platformData=[{"x":0, "y":430},{"x":45,"y":560},{"x":90,"y":290},{"x":0,"y":140}];
-        
+        this.levelData=JSON.parse(this.game.cache.getText('levelJSON'));
+        console.log(this.levelData);
         this.platformGroup=this.game.add.group();
         
         this.platformGroup.enableBody=true;
         
     
         
-        this.platformData.forEach(function(element){
+        this.levelData.platformData.forEach(function(element){
             this.platformNew=this.platformGroup.create(element.x,element.y,'platform');
         
         },this);
@@ -54,7 +56,7 @@ var GameState={
         
         
 
-        this.player=this.game.add.sprite(10,545,'player',3);
+        this.player=this.game.add.sprite(this.levelData.playerStart.x,this.levelData.playerStart.y,'player',3);
         this.player.anchor.setTo(0.5);
         this.player.animations.add('walking',[0,1,2,1],6,true);
         this.game.physics.arcade.enable(this.player);

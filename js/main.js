@@ -62,6 +62,10 @@ var GameState={
             this.fire.play('fire');
         },this);
         this.fires.setAll('body.allowGravity',false);
+        
+        this.goal=this.game.add.sprite(this.levelData.goal.x,this.levelData.goal.y,'gorilla');
+        this.game.physics.arcade.enable(this.goal);
+        this.goal.body.allowGravity=false;
 
         this.player=this.game.add.sprite(this.levelData.playerStart.x,this.levelData.playerStart.y,'player',3);
         this.player.anchor.setTo(0.5);
@@ -81,6 +85,7 @@ var GameState={
         this.game.physics.arcade.collide(this.player,this.ground, this.landed);
         this.game.physics.arcade.collide(this.player,this.platformGroup,this.landed);
         this.game.physics.arcade.overlap(this.player,this.fires,this.killPlayer);
+        this.game.physics.arcade.overlap(this.player,this.goal,this.wonGame);
         
         this.player.body.velocity.x=0;
         
@@ -116,6 +121,11 @@ var GameState={
     killPlayer : function(player,fire)
     {
        game.state.start('GameState'); 
+    },
+    
+    wonGame :  function(player, goal)
+    {
+        game.state.start('GameState');
     },
     
     createOnScreenControls : function()

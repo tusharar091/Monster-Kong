@@ -63,6 +63,14 @@ var GameState={
         },this);
         this.fires.setAll('body.allowGravity',false);
         
+        
+        
+        this.barrels=this.game.add.group();
+        this.barrels.enableBody=true;
+        this.createBarrel();
+        this.barrelCreator=this.game.time.events.loop(Phaser.Timer.SECOND*this.levelData.barrelFrequency,this.createBarrel,this);
+        
+        
         this.goal=this.game.add.sprite(this.levelData.goal.x,this.levelData.goal.y,'gorilla');
         this.game.physics.arcade.enable(this.goal);
         this.goal.body.allowGravity=false;
@@ -71,6 +79,8 @@ var GameState={
         this.player.anchor.setTo(0.5);
         this.player.animations.add('walking',[0,1,2,1],6,true);
         this.game.physics.arcade.enable(this.player);
+        this.player.body.collideWorldBounds=true;
+        
         
         this.player.customParams={};
         
@@ -79,6 +89,21 @@ var GameState={
         this.createOnScreenControls();
         
     },
+    createBarrel : function()
+    {
+        var barrel=this.barrels.getFirstExists(false);
+        
+        if(!barrel)
+            {
+                barrel=this.barrels.create(0,0,'barrel');
+                
+            }
+        
+        barrel.body.collideWorldBounds=true;
+        barrel.body.bounce.set(1,0);
+        barrel.reset(this.levelData.goal.x,this.levelData.goal.y);
+        barrel.body.velocity.x=this.levelData.barrelSpeed;
+    },
     
     update : function()
     {
@@ -86,6 +111,11 @@ var GameState={
         this.game.physics.arcade.collide(this.player,this.platformGroup,this.landed);
         this.game.physics.arcade.overlap(this.player,this.fires,this.killPlayer);
         this.game.physics.arcade.overlap(this.player,this.goal,this.wonGame);
+        this.game.physics.arcade.overlap(this.player,this.barrels,this.killPlayer);
+        
+        this.game.physics.arcade.collide(this.barrels,this.platformGroup,this.landed);
+        this.game.physics.arcade.collide(this.barrels,this.ground,this.landed);
+
         
         this.player.body.velocity.x=0;
         
@@ -110,7 +140,12 @@ var GameState={
                 this.player.body.velocity.y= -this.JUMPING_SPEED;
                 this.player.customParams['mustJump']=false;
             }
-        
+        this.barrels.forEach(function(element){
+            if(element.x<10&&element.y>600)
+                {
+                    element.kill();
+                }
+        },this);
     },
     
     landed : function(player, ground)

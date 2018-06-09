@@ -21,7 +21,17 @@
     
     "barrelFrequency" : 5,
     
-    "barrelSpeed" : 30
+    "barrelSpeed" : 30,
+    
+    "groundPos" : {"x":0,"y":638},
+    
+    "barrelBounds" :{"x":10,"y":600},
+    
+    "left" : {"x":20,"y":600},
+    
+    "right" : {"x":100,"y":600},
+    
+    "up" :{"x":280,"y":600}
     
     
     
